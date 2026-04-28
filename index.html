@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calsi</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #667eea, #764ba2, #6dd5ed);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .calculator {
+      backdrop-filter: blur(15px);
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      width: 280px;
+      text-align: center;
+      color: #fff;
+    }
+
+    h2 {
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      background: rgba(255,255,255,0.9);
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    button {
+      padding: 12px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background: linear-gradient(135deg, #ff7e5f, #feb47b);
+      color: white;
+      transition: 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    button:hover {
+      transform: translateY(-3px) scale(1.05);
+      background: linear-gradient(135deg, #ff6a4a, #fda763);
+    }
+
+    #result {
+      margin-top: 15px;
+      font-weight: 500;
+      font-size: 18px;
+      color: #ffffff;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="hero">
+    <div class="calculator">
+      <h2>Calculator</h2>
+
+      <input type="number" id="firstNum" placeholder="First number">
+      <input type="number" id="secondNum" placeholder="Second number">
+
+      <div class="buttons">
+        <button onclick="add()">+</button>
+        <button onclick="sub()">-</button>
+        <button onclick="mul()">*</button>
+        <button onclick="div()">/</button>
+      </div>
+
+      <p id="result">Result: </p>
+    </div>
+  </div>
+
+  <script>
+    function getNum() {
+      let firstNum = Number(document.getElementById("firstNum").value);
+      let secondNum = Number(document.getElementById("secondNum").value);
+      return { firstNum, secondNum };
+    }
+
+    function add() {
+      let nums = getNum();
+      let result = nums.firstNum + nums.secondNum;
+      document.getElementById("result").innerText = "Your Result is: " + result;
+    }
+
+    function sub() {
+      let nums = getNum();
+      let result = nums.firstNum - nums.secondNum;
+      document.getElementById("result").innerText = "Your Result is: " + result;
+    }
+
+    function mul() {
+      let nums = getNum();
+      let result = nums.firstNum * nums.secondNum;
+      document.getElementById("result").innerText = "Your Result is: " + result;
+    }
+
+    function div() {
+      let nums = getNum();
+      if (nums.secondNum === 0) {
+        document.getElementById("result").innerText = "Cannot divide by zero";
+      } else {
+        let result = nums.firstNum / nums.secondNum;
+        document.getElementById("result").innerText = "Your Result is: " + result;
+      }
+    }
+  </script>
+
+</body>
+</html>
