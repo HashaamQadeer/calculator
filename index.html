@@ -28,24 +28,19 @@
       padding: 25px;
       border-radius: 16px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      width: 280px;
+      width: 300px;
       text-align: center;
       color: #fff;
-    }
-
-    h2 {
-      margin-bottom: 15px;
-      font-weight: 600;
     }
 
     input {
       width: 90%;
       padding: 10px;
-      margin: 8px 0;
+      margin: 10px 0;
       border-radius: 8px;
       border: none;
       outline: none;
-      font-size: 16px;
+      font-size: 14px;
       background: rgba(255,255,255,0.9);
     }
 
@@ -53,7 +48,6 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 10px;
-      margin-top: 10px;
     }
 
     button {
@@ -64,78 +58,114 @@
       cursor: pointer;
       background: linear-gradient(135deg, #ff7e5f, #feb47b);
       color: white;
-      transition: 0.3s ease;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      transition: 0.3s;
     }
 
     button:hover {
-      transform: translateY(-3px) scale(1.05);
-      background: linear-gradient(135deg, #ff6a4a, #fda763);
+      transform: scale(1.05);
     }
 
     #result {
       margin-top: 15px;
-      font-weight: 500;
       font-size: 18px;
-      color: #ffffff;
     }
   </style>
 </head>
 
 <body>
 
-  <div class="hero">
-    <div class="calculator">
-      <h2>Calculator</h2>
+<div class="hero">
+  <div class="calculator">
+    <h2>Multi Calculator</h2>
 
-      <input type="number" id="firstNum" placeholder="First number">
-      <input type="number" id="secondNum" placeholder="Second number">
+    <!-- Single input for multiple numbers -->
+    <input type="text" id="numbers" placeholder="Enter up to 10 numbers (e.g. 2,5,8,10)">
 
-      <div class="buttons">
-        <button onclick="add()">+</button>
-        <button onclick="sub()">-</button>
-        <button onclick="mul()">*</button>
-        <button onclick="div()">/</button>
-      </div>
-
-      <p id="result">Result: </p>
+    <div class="buttons">
+      <button onclick="calculate('add')">+</button>
+      <button onclick="calculate('sub')">-</button>
+      <button onclick="calculate('mul')">*</button>
+      <button onclick="calculate('div')">/</button>
     </div>
+
+    <p id="result">Result: </p>
   </div>
+</div>
 
-  <script>
-    function getNum() {
-      let firstNum = Number(document.getElementById("firstNum").value);
-      let secondNum = Number(document.getElementById("secondNum").value);
-      return { firstNum, secondNum };
-    }
+<script>
+function getNumbers() { 
+    let input = document.getElementById("numbers").value; 
+    let nums = input.split(",").map(n => Number(n.trim())); 
+    if (nums.length > 10) { alert("Maximum 10 numbers allowed!"); 
+    return null; } 
+    if (nums.some(isNaN)) { alert("Please enter valid numbers!"); 
+    return null; } 
+    return nums; }
+    
+function calculate(op) {
+  let nums = getNumbers();
+  if (!nums) return;
 
-    function add() {
-      let nums = getNum();
-      let result = nums.firstNum + nums.secondNum;
-      document.getElementById("result").innerText = "Your Result is: " + result;
-    }
+  let result = nums[0]; // start from first number
 
-    function sub() {
-      let nums = getNum();
-      let result = nums.firstNum - nums.secondNum;
-      document.getElementById("result").innerText = "Your Result is: " + result;
-    }
+  for (let i = 1; i < nums.length; i++) {
 
-    function mul() {
-      let nums = getNum();
-      let result = nums.firstNum * nums.secondNum;
-      document.getElementById("result").innerText = "Your Result is: " + result;
-    }
-
-    function div() {
-      let nums = getNum();
-      if (nums.secondNum === 0) {
-        document.getElementById("result").innerText = "Cannot divide by zero";
-      } else {
-        let result = nums.firstNum / nums.secondNum;
-        document.getElementById("result").innerText = "Your Result is: " + result;
+    if (op === 'add') {
+      result += nums[i];
+    } 
+    else if (op === "sub") {
+      result -= nums[i];
+    } 
+    else if (op === "mul") {
+      result *= nums[i];
+    } 
+    else if (op === "div") {
+      if (nums[i] === 0) {
+        alert("Cannot divide by zero!");
+        return;
       }
+      result /= nums[i];
     }
+
+  }
+
+  document.getElementById("result").innerText = "Result: " + result;
+}
+
+
+
+
+
+
+
+  
+//     function add() {
+//       let nums = getNum();
+//       let result = nums.firstNum + nums.secondNum;
+//       document.getElementById("result").innerText = "Your Result is: " + result;
+//     }
+
+//     function sub() {
+//       let nums = getNum();
+//       let result = nums.firstNum - nums.secondNum;
+//       document.getElementById("result").innerText = "Your Result is: " + result;
+//     }
+
+//     function mul() {
+//       let nums = getNum();
+//       let result = nums.firstNum * nums.secondNum;
+//       document.getElementById("result").innerText = "Your Result is: " + result;
+//     }
+
+//     function div() {
+//       let nums = getNum();
+//       if (nums.secondNum === 0) {
+//         document.getElementById("result").innerText = "Cannot divide by zero";
+//       } else {
+//         let result = nums.firstNum / nums.secondNum;
+//         document.getElementById("result").innerText = "Your Result is: " + result;
+//       }
+//     }
   </script>
 
 </body>
