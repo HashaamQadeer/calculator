@@ -46,7 +46,7 @@
 
     .buttons {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
       gap: 10px;
     }
 
@@ -76,9 +76,8 @@
 
 <div class="hero">
   <div class="calculator">
-    <h2>Multi Calculator</h2>
+    <h2>Calculator</h2>
 
-    <!-- Single input for multiple numbers -->
     <input type="text" id="numbers" placeholder="Enter up to 10 numbers (e.g. 2,5,8,10)">
 
     <div class="buttons">
@@ -86,6 +85,10 @@
       <button onclick="calculate('sub')">-</button>
       <button onclick="calculate('mul')">*</button>
       <button onclick="calculate('div')">/</button>
+      <button onclick="calculate('avg')">AVG</button>
+      <button onclick="calculate('min')">MIN</button>
+      <button onclick="calculate('max')">MAX</button>
+
     </div>
 
     <p id="result">Result: </p>
@@ -101,16 +104,20 @@ function getNumbers() {
     if (nums.some(isNaN)) { alert("Please enter valid numbers!"); 
     return null; } 
     return nums; }
-    
+
 function calculate(op) {
   let nums = getNumbers();
   if (!nums) return;
 
-  let result = nums[0]; // start from first number
+  let result = nums[0]; 
+  let sum = nums[0]; 
 
   for (let i = 1; i < nums.length; i++) {
-
-    if (op === 'add') {
+    if(op === "avg"){
+        sum += nums[i];
+        result = sum /nums.length;
+    }
+    else if (op === 'add') {
       result += nums[i];
     } 
     else if (op === "sub") {
@@ -126,7 +133,12 @@ function calculate(op) {
       }
       result /= nums[i];
     }
-
+    else if (op ==="min"){
+        result = Math.min(result, nums[i]);
+    }
+    else if (op === "max"){
+        result = Math.max(result, nums[i]);
+    }
   }
 
   document.getElementById("result").innerText = "Result: " + result;
