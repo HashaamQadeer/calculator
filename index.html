@@ -28,7 +28,7 @@
       padding: 25px;
       border-radius: 16px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      width: 300px;
+      width: 320px;
       text-align: center;
       color: #fff;
     }
@@ -36,23 +36,23 @@
     input {
       width: 90%;
       padding: 10px;
-      margin: 10px 0;
+      margin: 5px 0;
       border-radius: 8px;
       border: none;
       outline: none;
       font-size: 14px;
-      background: rgba(255,255,255,0.9);
     }
 
     .buttons {
       display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: 10px;
+      margin-top: 10px;
     }
 
     button {
-      padding: 12px;
-      font-size: 18px;
+      padding: 10px;
+      font-size: 16px;
       border: none;
       border-radius: 10px;
       cursor: pointer;
@@ -69,6 +69,11 @@
       margin-top: 15px;
       font-size: 18px;
     }
+
+    .control-btn {
+      margin-top: 8px;
+      background: #222;
+    }
   </style>
 </head>
 
@@ -78,7 +83,13 @@
   <div class="calculator">
     <h2>Calculator</h2>
 
-    <input type="text" id="numbers" placeholder="Enter up to 10 numbers (e.g. 2,5,8,10)">
+    <div id="inputContainer">
+      <input type="number" class="numInput" placeholder="Enter number">
+    </div>
+
+    <button class="control-btn" onclick="addInput()">Add Number</button>
+    <button class="control-btn" onclick="removeInput()">Remove Number</button>
+    <button class="control-btn" onclick="clearInputs()">Clear All</button>
 
     <div class="buttons">
       <button onclick="calculate('add')">+</button>
@@ -88,7 +99,6 @@
       <button onclick="calculate('avg')">AVG</button>
       <button onclick="calculate('min')">MIN</button>
       <button onclick="calculate('max')">MAX</button>
-
     </div>
 
     <p id="result">Result: </p>
@@ -96,89 +106,134 @@
 </div>
 
 <script>
-function getNumbers() { 
-    let input = document.getElementById("numbers").value; 
-    let nums = input.split(",").map(n => Number(n.trim())); 
-    if (nums.length > 10) { alert("Maximum 10 numbers allowed!"); 
-    return null; } 
-    if (nums.some(isNaN)) { alert("Please enter valid numbers!"); 
-    return null; } 
-    return nums; }
+
+function addInput() {
+  let container = document.getElementById("inputContainer");
+
+  if (document.querySelectorAll(".numInput").length >= 10) {
+    alert("Maximum 10 inputs allowed!");
+    return;
+  }
+
+  let input = document.createElement("input");
+  input.type = "number";
+  input.className = "numInput";
+  input.placeholder = "Enter number";
+
+  container.appendChild(input);
+}
+
+function removeInput() {
+  let container = document.getElementById("inputContainer");
+  let inputs = document.querySelectorAll(".numInput");
+
+  if (inputs.length <= 1) {
+    alert("At least one input is required!");
+    return;
+  }
+
+  container.removeChild(inputs[inputs.length - 1]);
+}
+
+function clearInputs() {
+  let inputs = document.querySelectorAll(".numInput");
+
+  for (let i = 0; i < inputs.length; i++) {
+    inputs[i].value = "";
+  }
+
+  document.getElementById("result").innerText = "Result: ";
+}
+
+function getNumbers() {
+  let inputs = document.querySelectorAll(".numInput");
+  let nums = [];
+
+  for (let i = 0; i < inputs.length; i++) {
+    let value = inputs[i].value.trim();
+
+    if (value === "") {
+      alert("Please fill all inputs!");
+      return null;
+    }
+
+    let num = Number(value);
+
+    if (isNaN(num)) {
+      alert("Only valid numbers allowed!");
+      return null;
+    }
+
+    nums.push(num);
+  }
+
+  return nums;
+}
 
 function calculate(op) {
   let nums = getNumbers();
   if (!nums) return;
 
-  let result = nums[0]; 
-  let sum = nums[0]; 
+  let result;
 
-  for (let i = 1; i < nums.length; i++) {
-    if(op === "avg"){
-        sum += nums[i];
-        result = sum /nums.length;
-    }
-    else if (op === 'add') {
+  if (op === "add") {
+    result = 0;
+    for (let i = 0; i < nums.length; i++) {
       result += nums[i];
-    } 
-    else if (op === "sub") {
+    }
+  }
+
+  else if (op === "sub") {
+    result = nums[0];
+    for (let i = 1; i < nums.length; i++) {
       result -= nums[i];
-    } 
-    else if (op === "mul") {
+    }
+  }
+
+  else if (op === "mul") {
+    result = 1;
+    for (let i = 0; i < nums.length; i++) {
       result *= nums[i];
-    } 
-    else if (op === "div") {
+    }
+  }
+
+  else if (op === "div") {
+    result = nums[0];
+    for (let i = 1; i < nums.length; i++) {
       if (nums[i] === 0) {
         alert("Cannot divide by zero!");
         return;
       }
       result /= nums[i];
     }
-    else if (op ==="min"){
-        result = Math.min(result, nums[i]);
+  }
+
+  else if (op === "avg") {
+    let sum = 0;
+    for (let i = 0; i < nums.length; i++) {
+      sum += nums[i];
     }
-    else if (op === "max"){
-        result = Math.max(result, nums[i]);
+    result = sum / nums.length;
+  }
+
+  else if (op === "min") {
+    result = nums[0];
+    for (let i = 1; i < nums.length; i++) {
+      if (nums[i] < result) result = nums[i];
+    }
+  }
+
+  else if (op === "max") {
+    result = nums[0];
+    for (let i = 1; i < nums.length; i++) {
+      if (nums[i] > result) result = nums[i];
     }
   }
 
   document.getElementById("result").innerText = "Result: " + result;
 }
 
-
-
-
-
-
-
-  
-//     function add() {
-//       let nums = getNum();
-//       let result = nums.firstNum + nums.secondNum;
-//       document.getElementById("result").innerText = "Your Result is: " + result;
-//     }
-
-//     function sub() {
-//       let nums = getNum();
-//       let result = nums.firstNum - nums.secondNum;
-//       document.getElementById("result").innerText = "Your Result is: " + result;
-//     }
-
-//     function mul() {
-//       let nums = getNum();
-//       let result = nums.firstNum * nums.secondNum;
-//       document.getElementById("result").innerText = "Your Result is: " + result;
-//     }
-
-//     function div() {
-//       let nums = getNum();
-//       if (nums.secondNum === 0) {
-//         document.getElementById("result").innerText = "Cannot divide by zero";
-//       } else {
-//         let result = nums.firstNum / nums.secondNum;
-//         document.getElementById("result").innerText = "Your Result is: " + result;
-//       }
-//     }
-  </script>
+</script>
 
 </body>
 </html>
